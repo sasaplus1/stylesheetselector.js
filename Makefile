@@ -1,3 +1,5 @@
+script = stylesheetselector.js
+
 .PHONY: all
 all:
 
