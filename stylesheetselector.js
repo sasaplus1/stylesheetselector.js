@@ -51,7 +51,6 @@ var sss = sss || {};
       if (typeof getStyleSheetList_.memoize !== 'undefined') {
         return getStyleSheetList_.memoize;
       }
-      getStyleSheetList_.memoize = {};
       links = document.getElementsByTagName('link');
       styleSheetList = [];
       for (i = 0, len = links.length; i < len; i += 1) {
