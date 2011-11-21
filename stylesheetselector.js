@@ -35,6 +35,11 @@ var sss = sss || {};
 
     var isWebKit_ = typeof navigator['taintEnabled'] === 'undefined';
 
+    /**
+     * get stylesheet list
+     *
+     * @return {Object}
+     */
     function getStyleSheetList_() {
       var i,
           len,
@@ -60,6 +65,11 @@ var sss = sss || {};
       return styleSheetList;
     }
 
+    /**
+     * get current stylesheet title
+     *
+     * @return {String}
+     */
     function getStyleSheet() {
       var i,
           len,
@@ -72,13 +82,18 @@ var sss = sss || {};
       return '';
     }
 
+    /**
+     * set stylesheet
+     *
+     * @param {String} title
+     */
     function setStyleSheet(title) {
       var i,
           len,
           styleSheetList = getStyleSheetList_(),
           value = title.toString();
       for (i = 0, len = styleSheetList.length; i < len; i += 1) {
-        styleSheetList[i].disabled = styleSheetList[i].title !== value;
+        styleSheetList[i].disabled = (styleSheetList[i].title !== value);
         if (isWebKit_) {
           styleSheetList[i].disabled = !styleSheetList[i].disabled;
           styleSheetList[i].disabled = !styleSheetList[i].disabled;
@@ -95,6 +110,11 @@ var sss = sss || {};
 
   s.cookie = (function(){
 
+    /**
+     * clear cookie
+     *
+     * @param {Object} values
+     */
     function clearCookie(values) {
       setCookie({
         key:    values.key.toString()    || '',
@@ -106,18 +126,30 @@ var sss = sss || {};
       });
     }
 
+    /**
+     * get cookie value of key
+     *
+     * @param {String} key
+     * @return {String}
+     */
     function getCookie(key) {
       var i,
           len,
-          cookie = document.cookie.split(';');
+          cookie = document.cookie.split(';'),
+          keyValue = key.toString();
       for (i = 0, len = cookie.length; i < len; i += 1) {
-        if (cookie[i].indexOf(key) !== -1) {
-          return cookie[i].slice(key.length + 1, cookie[i].length);
+        if (cookie[i].indexOf(keyValue) !== -1) {
+          return cookie[i].slice(keyValue.length + 1, cookie[i].length);
         }
       }
       return '';
     }
 
+    /**
+     * set cookie
+     *
+     * @param {Object} values
+     */
     function setCookie(values) {
       var cookieString,
           limitDate,
@@ -127,7 +159,7 @@ var sss = sss || {};
           path   = values.path.toString()   || '',
           limit  = values.limit             || 0,
           secure = values.secure            || false;
-      cookieString = key + '=' + value + ';domain=' + domain ';path=' + path;
+      cookieString = key + '=' + value + ';domain=' + domain + ';path=' + path;
       if (typeof limit === 'Number') {
         limitDate = new Date();
         limitDate.setTime(
