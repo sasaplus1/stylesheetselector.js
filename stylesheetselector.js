@@ -27,11 +27,9 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
-var sss = sss || {};
+(function(){
 
-(function(s){
-
-  s.stylesheet = (function(){
+  var stylesheet = (function(){
 
     var isWebKit_ = typeof navigator['taintEnabled'] === 'undefined';
 
@@ -105,9 +103,9 @@ var sss = sss || {};
       set: setStyleSheet
     };
 
-  }());
+  }()),
 
-  s.cookie = (function(){
+  cookie = (function(){
 
     /**
      * clear cookie
@@ -180,4 +178,4 @@ var sss = sss || {};
 
   }());
 
-}(sss));
+}());
