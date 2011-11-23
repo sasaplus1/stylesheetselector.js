@@ -40,7 +40,6 @@
      */
     function getStyleSheetList_() {
       var i,
-          len,
           links,
           styleSheetList;
       if (typeof document.styleSheets !== 'undefined' && !isWebkit_) {
@@ -51,11 +50,11 @@
       }
       links = document.getElementsByTagName('link');
       styleSheetList = [];
-      for (i = 0, len = links.length; i < len; i += 1) {
-        if (typeof i.rel !== 'undefined' &&
-            i.rel.toLowerCase().indexOf('stylesheet') !== -1 &&
-            typeof i.title !== 'undefined') {
-          styleSheetList.push(links[i]);
+      for (i = links.length; i -= 1;) {
+        if (links[i].rel &&
+            links[i].rel.toLowerCase().indexOf('stylesheet') !== -1 &&
+            links[i].title) {
+          styleSheetList.unshift(links[i]);
         }
       }
       getStyleSheetList_.memoize = styleSheetList;
