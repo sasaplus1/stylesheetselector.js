@@ -29,9 +29,17 @@
  */
 (function(){
 
-  var StyleSheet = (function(){
+  var StyleSheet,
+      Cookie,
+      Event;
 
-    var isWebKit_ = typeof navigator['taintEnabled'] === 'undefined';
+  if (!navigator.cookieEnabled) {
+    return;
+  }
+
+  StyleSheet = (function(){
+
+    var isWebKit_ = (navigator['taintEnabled'] === void 0);
 
     /**
      * get stylesheet list
@@ -100,7 +108,7 @@
       set: setStyleSheet
     };
 
-  }()),
+  }());
 
   Cookie = (function(){
 
@@ -170,6 +178,43 @@
       clear: clearCookie,
       get: getCookie,
       set: setCookie
+    };
+
+  }());
+
+  Event = (function(){
+
+    var hasEventListener = (window.addEventListener !== void 0);
+
+    function addEvent_(obj, type, func) {
+      if (addEvent_.memoize !== void 0) {
+        addEvent_.memoize(obj, type, func);
+        return;
+      }
+      addEvent_.memoize = (hasEventListener) ?
+          function (obj_, type_, func_) {
+            obj_.addEventListener(type_, func_, false);
+          } :
+          function (obj_, type_, func_) {
+            obj_attachEvent('on' + type_, func_);
+          };
+      addEvent_.memoize(obj, type, func);
+    }
+
+    function addLoad(func) {
+      var ev = (hasEventListener) ?
+          { obj: document, type: 'DOMContentLoaded' } :
+          { obj: window,   type: 'load' };
+      addEvent_(ev.obj, ev.type, func);
+    }
+
+    function addUnLoad(func) {
+      addEvent_(window, 'unload', func);
+    }
+
+    return {
+      load: addLoad,
+      unload: addUnLoad
     };
 
   }());
