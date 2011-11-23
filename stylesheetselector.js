@@ -29,7 +29,7 @@
  */
 (function(){
 
-  var stylesheet = (function(){
+  var StyleSheet = (function(){
 
     var isWebKit_ = typeof navigator['taintEnabled'] === 'undefined';
 
@@ -105,7 +105,7 @@
 
   }()),
 
-  cookie = (function(){
+  Cookie = (function(){
 
     /**
      * clear cookie
