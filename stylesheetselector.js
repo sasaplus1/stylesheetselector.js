@@ -112,12 +112,12 @@
      */
     function clearCookie(values) {
       setCookie({
-        key:    values.key.toString()    || '',
+        key:    values.key    || '',
         value:  '',
-        domain: values.domain.toString() || '',
-        path:   values.path.toString()   || '',
+        domain: values.domain || '',
+        path:   values.path   || '',
         limit:  0,
-        secure: values.secure            || false
+        secure: values.secure || false
       });
     }
 
