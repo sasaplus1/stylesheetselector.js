@@ -29,7 +29,28 @@
  */
 (function(){
 
-  var Cookie,
+  var Constant = {
+        Cookie: {
+          NAME:   'stylesheet',
+          LIMIT:  90,
+          DOMAIN: 'www.google.com',
+          PATH:   '/',
+          SECURE: false
+        },
+        Element: {
+          BASE_TAG:
+          '<div id="style">' +
+            '<label>style: ' +
+              '<select>'     +
+                '%OPTIONS%'  +
+              '</select>'    +
+            '</label>'       +
+          '</div>',
+          ITEM_TAG: '<option value="%TITLE%"%SELECTED%>%TITLE%</option>',
+          PARENT_ID: 'styleContainer'
+        }
+      },
+      Cookie,
       Event,
       StyleSheet,
 
@@ -41,6 +62,14 @@
   }
 
   function onUnload() {
+    Cookie.set({
+      key:    Constant.Cookie.NAME,
+      value:  StyleSheet.get(),
+      domain: Constant.Cookie.DOMAIN,
+      path:   Constant.Cookie.PATH,
+      limit:  Constant.Cookie.LIMIT,
+      secure: Constant.Cookie.SECURE
+    });
   }
 
   Cookie = (function(){
@@ -98,7 +127,7 @@
         limitDate = new Date();
         limitDate.setTime(
             (limit > 0) ? limitDate.getTime() + 24 * 60 * 60 * 1000 * limit : 0
-        );
+            );
         cookieString += ';expires=' + limitDate.toGMTString();
       }
       if (secure) {
@@ -119,33 +148,34 @@
 
     var hasEventListener = (window.addEventListener !== void 0);
 
-    function addEvent_(obj, type, func) {
-      if (addEvent_.memoize !== void 0) {
-        addEvent_.memoize(obj, type, func);
+    function addEvent(obj, type, func) {
+      if (addEvent.memoize !== void 0) {
+        addEvent.memoize(obj, type, func);
         return;
       }
-      addEvent_.memoize = (hasEventListener) ?
+      addEvent.memoize = (hasEventListener) ?
           function (obj_, type_, func_) {
             obj_.addEventListener(type_, func_, false);
           } :
           function (obj_, type_, func_) {
             obj_attachEvent('on' + type_, func_);
           };
-      addEvent_.memoize(obj, type, func);
+      addEvent.memoize(obj, type, func);
     }
 
     function addLoad(func) {
       var ev = (hasEventListener) ?
           { obj: document, type: 'DOMContentLoaded' } :
           { obj: window,   type: 'load' };
-      addEvent_(ev.obj, ev.type, func);
+      addEvent(ev.obj, ev.type, func);
     }
 
     function addUnload(func) {
-      addEvent_(window, 'unload', func);
+      addEvent(window, 'unload', func);
     }
 
     return {
+      add: addEvent,
       load: addLoad,
       unload: addUnload
     };
@@ -161,15 +191,15 @@
      *
      * @return {Object}
      */
-    function getStyleSheetList_() {
+    function getStyleSheetList() {
       var i,
           links,
           styleSheetList;
       if (typeof document.styleSheets !== 'undefined' && !isWebkit_) {
         return document.styleSheets;
       }
-      if (typeof getStyleSheetList_.memoize !== 'undefined') {
-        return getStyleSheetList_.memoize;
+      if (typeof getStyleSheetList.memoize !== 'undefined') {
+        return getStyleSheetList.memoize;
       }
       links = document.getElementsByTagName('link');
       styleSheetList = [];
@@ -180,7 +210,7 @@
           styleSheetList.unshift(links[i]);
         }
       }
-      getStyleSheetList_.memoize = styleSheetList;
+      getStyleSheetList.memoize = styleSheetList;
       return styleSheetList;
     }
 
@@ -191,7 +221,7 @@
      */
     function getStyleSheet() {
       var i,
-          styleSheetList = getStyleSheetList_();
+          styleSheetList = getStyleSheetList();
       for (i = styleSheetList.length; i -= 1;) {
         if (!styleSheetList[i].disabled) {
           return styleSheetList[i].title;
@@ -207,7 +237,7 @@
      */
     function setStyleSheet(title) {
       var i,
-          styleSheetList = getStyleSheetList_(),
+          styleSheetList = getStyleSheetList(),
           value = title.toString();
       for (i = styleSheetList.length; i -= 1;) {
         styleSheetList[i].disabled = (styleSheetList[i].title !== value);
@@ -220,6 +250,7 @@
 
     return {
       get: getStyleSheet,
+      getList: getStyleSheetList,
       set: setStyleSheet
     };
 
