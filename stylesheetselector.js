@@ -59,6 +59,37 @@
   }
 
   function onLoad() {
+    var styleSheetList = StyleSheet.getList(),
+        styleSheetTitle = Cookie.get(Constant.Cookie.NAME) ||
+          (styleSheetList[0] && styleSheetList[0].title) || '';
+
+    function setStyle() {
+      StyleSheet.set(styleSheetTitle);
+    }
+
+    function addElement() {
+      var i,
+          itemTags = [],
+          parentTag = document.getElementById(Constant.Element.PARENT_ID),
+          selectTag = parentTag.getElementsByTagName('select')[0],
+          titleRegex = /%TITLE%/g;
+      for (i = styleSheetList.length; i -= 1;) {
+        itemTags.unshift(Constant.Element.ITEM_TAG
+            .replace('%SELECTED%', (styleSheetList[i].title === styleSheetTitle) ?
+              ' selected="selected"' : '')
+            .replace(titleRegex, styleSheetList[i].title));
+      }
+      parentTag.innerHTML = Constant.Element.BASE_TAG.replace('%OPTIONS%',
+          itemTags.join(''));
+      Event.add(selectTag, 'change' , function(e) {
+        var ev = e || window.event,
+            target = ev.target || ev.srcElement;
+        StyleSheet.set(target.options[target.selectedIndex].text);
+      });
+    }
+
+    setStyle();
+    addElement();
   }
 
   function onUnload() {
