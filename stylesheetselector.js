@@ -29,86 +29,19 @@
  */
 (function(){
 
-  var StyleSheet,
-      Cookie,
-      Event;
+  var Cookie,
+      Event,
+      StyleSheet,
 
   if (!navigator.cookieEnabled) {
     return;
   }
 
-  StyleSheet = (function(){
+  function onLoad() {
+  }
 
-    var isWebKit_ = (navigator['taintEnabled'] === void 0);
-
-    /**
-     * get stylesheet list
-     *
-     * @return {Object}
-     */
-    function getStyleSheetList_() {
-      var i,
-          links,
-          styleSheetList;
-      if (typeof document.styleSheets !== 'undefined' && !isWebkit_) {
-        return document.styleSheets;
-      }
-      if (typeof getStyleSheetList_.memoize !== 'undefined') {
-        return getStyleSheetList_.memoize;
-      }
-      links = document.getElementsByTagName('link');
-      styleSheetList = [];
-      for (i = links.length; i -= 1;) {
-        if (links[i].rel &&
-            links[i].rel.toLowerCase().indexOf('stylesheet') !== -1 &&
-            links[i].title) {
-          styleSheetList.unshift(links[i]);
-        }
-      }
-      getStyleSheetList_.memoize = styleSheetList;
-      return styleSheetList;
-    }
-
-    /**
-     * get current stylesheet title
-     *
-     * @return {String}
-     */
-    function getStyleSheet() {
-      var i,
-          styleSheetList = getStyleSheetList_();
-      for (i = styleSheetList.length; i -= 1;) {
-        if (!styleSheetList[i].disabled) {
-          return styleSheetList[i].title;
-        }
-      }
-      return '';
-    }
-
-    /**
-     * set stylesheet
-     *
-     * @param {String} title
-     */
-    function setStyleSheet(title) {
-      var i,
-          styleSheetList = getStyleSheetList_(),
-          value = title.toString();
-      for (i = styleSheetList.length; i -= 1;) {
-        styleSheetList[i].disabled = (styleSheetList[i].title !== value);
-        if (isWebKit_) {
-          styleSheetList[i].disabled = !styleSheetList[i].disabled;
-          styleSheetList[i].disabled = !styleSheetList[i].disabled;
-        }
-      }
-    }
-
-    return {
-      get: getStyleSheet,
-      set: setStyleSheet
-    };
-
-  }());
+  function onUnload() {
+  }
 
   Cookie = (function(){
 
@@ -208,15 +141,91 @@
       addEvent_(ev.obj, ev.type, func);
     }
 
-    function addUnLoad(func) {
+    function addUnload(func) {
       addEvent_(window, 'unload', func);
     }
 
     return {
       load: addLoad,
-      unload: addUnLoad
+      unload: addUnload
     };
 
   }());
+
+  StyleSheet = (function(){
+
+    var isWebKit_ = (navigator['taintEnabled'] === void 0);
+
+    /**
+     * get stylesheet list
+     *
+     * @return {Object}
+     */
+    function getStyleSheetList_() {
+      var i,
+          links,
+          styleSheetList;
+      if (typeof document.styleSheets !== 'undefined' && !isWebkit_) {
+        return document.styleSheets;
+      }
+      if (typeof getStyleSheetList_.memoize !== 'undefined') {
+        return getStyleSheetList_.memoize;
+      }
+      links = document.getElementsByTagName('link');
+      styleSheetList = [];
+      for (i = links.length; i -= 1;) {
+        if (links[i].rel &&
+            links[i].rel.toLowerCase().indexOf('stylesheet') !== -1 &&
+            links[i].title) {
+          styleSheetList.unshift(links[i]);
+        }
+      }
+      getStyleSheetList_.memoize = styleSheetList;
+      return styleSheetList;
+    }
+
+    /**
+     * get current stylesheet title
+     *
+     * @return {String}
+     */
+    function getStyleSheet() {
+      var i,
+          styleSheetList = getStyleSheetList_();
+      for (i = styleSheetList.length; i -= 1;) {
+        if (!styleSheetList[i].disabled) {
+          return styleSheetList[i].title;
+        }
+      }
+      return '';
+    }
+
+    /**
+     * set stylesheet
+     *
+     * @param {String} title
+     */
+    function setStyleSheet(title) {
+      var i,
+          styleSheetList = getStyleSheetList_(),
+          value = title.toString();
+      for (i = styleSheetList.length; i -= 1;) {
+        styleSheetList[i].disabled = (styleSheetList[i].title !== value);
+        if (isWebKit_) {
+          styleSheetList[i].disabled = !styleSheetList[i].disabled;
+          styleSheetList[i].disabled = !styleSheetList[i].disabled;
+        }
+      }
+    }
+
+    return {
+      get: getStyleSheet,
+      set: setStyleSheet
+    };
+
+  }());
+
+  Event.load(onLoad);
+  Event.unload(onUnload);
 
 }());
