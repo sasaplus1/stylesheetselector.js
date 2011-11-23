@@ -68,9 +68,8 @@
      */
     function getStyleSheet() {
       var i,
-          len,
           styleSheetList = getStyleSheetList_();
-      for (i = 0, len = styleSheetList.length; i < len; i += 1) {
+      for (i = styleSheetList.length; i -= 1;) {
         if (!styleSheetList[i].disabled) {
           return styleSheetList[i].title;
         }
@@ -85,10 +84,9 @@
      */
     function setStyleSheet(title) {
       var i,
-          len,
           styleSheetList = getStyleSheetList_(),
           value = title.toString();
-      for (i = 0, len = styleSheetList.length; i < len; i += 1) {
+      for (i = styleSheetList.length; i -= 1;) {
         styleSheetList[i].disabled = (styleSheetList[i].title !== value);
         if (isWebKit_) {
           styleSheetList[i].disabled = !styleSheetList[i].disabled;
@@ -130,10 +128,9 @@
      */
     function getCookie(key) {
       var i,
-          len,
           cookie = document.cookie.split(';'),
           keyValue = key.toString();
-      for (i = 0, len = cookie.length; i < len; i += 1) {
+      for (i = cookie.length; i -= 1;) {
         if (cookie[i].indexOf(keyValue) !== -1) {
           return cookie[i].slice(keyValue.length + 1, cookie[i].length);
         }
